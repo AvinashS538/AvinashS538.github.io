@@ -2,7 +2,7 @@
 
 Product Manager with a software engineering foundation. Building AI-powered B2B2C platforms at scale.
 
-🌐 **Portfolio**: [avinash-somisetty.github.io](https://avinash-somisetty.github.io)  
+🌐 **Portfolio**: [AvinashS538.github.io](https://AvinashS538.github.io)  
 💼 **LinkedIn**: [linkedin.com/in/avinash-somisetty](https://www.linkedin.com/in/avinash-somisetty/)  
 📧 **Email**: aviforavinash@gmail.com
 
@@ -13,7 +13,7 @@ Product Manager with a software engineering foundation. Building AI-powered B2B2
 ### [BESS Report Automation](./projects/bess-report-automation/)
 Automated one-pager PDF/HTML report generator for Telco Battery Energy Storage System sites. Processes smart meter CSV data into daily operational reports with energy consumption analytics, charging/discharging session analysis, and S.H.O.W. KPIs.
 
-**Tech**: Python, pandas, WeasyPrint, HTML/CSS
+**Tech**: Python, pandas, HTML/CSS
 
 ---
 
