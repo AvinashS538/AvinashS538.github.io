@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BESS Report - Feb 28, 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    color: #333;
+    background: #f5f5f5;
+    line-height: 1.4;
+  }
+
+  .report-container {
+    max-width: 900px;
+    margin: 16px auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 20px 24px;
+  }
+
+  /* ═══ HEADER ═══ */
+  .header-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .header-box {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 14px 16px;
+    background: #fafafa;
+    position: relative;
+  }
+  .header-box h3 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #222;
+  }
+  .header-box .site-block {
+    margin-bottom: 6px;
+  }
+  .header-box .site-block strong {
+    font-size: 11.5px;
+    color: #111;
+  }
+  .header-box .site-block p {
+    font-size: 10.5px;
+    color: #555;
+    margin: 1px 0;
+    line-height: 1.35;
+  }
+  .battery-icons {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    gap: 4px;
+  }
+  .battery-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  /* ═══ SECTION TITLES ═══ */
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 18px 0 6px 0;
+    padding-bottom: 3px;
+  }
+  .section-title.red { color: #C62828; }
+  .section-title.gold { color: #B8860B; }
+  .section-title.blue { color: #1565C0; }
+  .section-title.green { color: #2E7D32; text-decoration: underline; }
+  .section-title.purple { color: #6A1B9A; text-decoration: underline; }
+
+  .section-subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 2px 0 6px 0;
+    color: #444;
+  }
+
+  /* ═══ TABLES ═══ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 11px;
+  }
+  th {
+    background: #f0f0f0;
+    font-weight: 600;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 10.5px;
+    color: #333;
+  }
+  td {
+    padding: 5px 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 11px;
+    color: #444;
+  }
+  tbody tr:nth-child(even) {
+    background: #fcfcfc;
+  }
+
+  /* ═══ OPERATIONAL OVERVIEW CARDS ═══ */
+  .op-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #B8860B;
+    margin: 14px 0 8px 0;
+  }
+  .op-grid {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .op-card {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    background: #fff;
+  }
+  .op-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .op-icon-wrap.green  { background: #e8f5e9; }
+  .op-icon-wrap.red    { background: #fce4ec; }
+  .op-icon-wrap.blue   { background: #e3f2fd; }
+  .op-icon-wrap.orange { background: #fff3e0; }
+  .op-icon-wrap.purple { background: #f3e5f5; }
+
+  .op-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.2;
+  }
+  .op-value .unit {
+    font-size: 11px;
+    font-weight: 400;
+    color: #888;
+  }
+  .op-label {
+    font-size: 9.5px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* ═══ S.H.O.W. HEADER COLORS ═══ */
+  .show-safety  { background: #FFCDD2 !important; color: #B71C1C; font-weight: 700; }
+  .show-health  { background: #C8E6C9 !important; color: #1B5E20; font-weight: 700; }
+  .show-ops     { background: #FFE0B2 !important; color: #E65100; font-weight: 700; }
+  .show-warranty{ background: #D1C4E9 !important; color: #4A148C; font-weight: 700; }
+
+  /* ═══ DETAILED SESSION TABLE ═══ */
+  .detail-table th {
+    font-size: 9.5px;
+    padding: 4px 4px;
+    background: #f5f5f5;
+  }
+  .detail-table td {
+    font-size: 9.5px;
+    padding: 3px 4px;
+  }
+  .detail-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 10px 0 6px 0;
+    color: #333;
+  }
+
+  .note {
+    font-size: 10px;
+    color: #888;
+    margin-top: 6px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="report-container">
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- HEADER: Tower Site Overview + BESS Deploy  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="header-row">
+    <div class="header-box">
+      <h3>Tower Site Overview</h3>
+      <div class="battery-icons">
+        <div class="battery-icon">🔋</div>
+        <div class="battery-icon">🏗️</div>
+      </div>
+      <div class="site-block">
+        <strong>Site 1: ( I-KA-KOLR-ENB-9059 )</strong>
+        <p>EB (15 KVA) & Solar (7.5 KW)<br>
+        314Ah based BESS for Backup at DC Bus (30 kWh)<br>
+        DG (Make:M&M, 10KVA) as a last-resort power source</p>
+      </div>
+      <div class="site-block">
+        <strong>Site 2: ( I-KA-BGLR-ENB-3469 )</strong>
+        <p>EB (15 KVA)<br>
+        314Ah based BESS for Backup at DC Bus (30 kWh)</p>
+      </div>
+      <div class="site-block">
+        <strong>Site 3: ( I-UP-GOND-ENB-9145 )</strong>
+        <p>EB (15 KVA)<br>
+        314Ah based BESS for Backup at DC Bus (30 kWh)</p>
+      </div>
+    </div>
+
+    <div class="header-box">
+      <h3>BESS Deployment Details</h3>
+      <div class="site-block">
+        <strong>Site 1: ( I-KA-KOLR-ENB-9059 )</strong>
+        <p>2 New 314Ah 48V BESS (in Parallel)<br>
+        Commissioned successfully on <strong>Jan 9, 2026</strong></p>
+      </div>
+      <div class="site-block">
+        <strong>Site 2: ( I-KA-BGLR-ENB-3469 )</strong>
+        <p>2 New 314Ah 48V BESS (in Parallel)<br>
+        Commissioned successfully on <strong>Feb 05, 2026</strong></p>
+      </div>
+      <div class="site-block">
+        <strong>Site 3: ( I-UP-GOND-ENB-9145 )</strong>
+        <p>2 New 314Ah 48V BESS (in Parallel)<br>
+        Commissioned successfully on <strong>Feb 19, 2026</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 1: Energy Trend (Zabbix)           -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-title red">Energy Trend observed via Zabbix Data</div>
+  <div class="section-subtitle">Energy Consumption Summary for Feb 26, 2026</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Sno</th><th>SAP ID</th><th>DC Load Energy</th><th>EB Energy</th>
+        <th>Battery DC Discharge</th><th>Solar DC MPPT</th><th>Unaccounted Energy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td><td>I-KA-KOLR-ENB-9059</td><td>106.42 kWh</td><td>58.21 kWh</td>
+        <td>1.81 kWh</td><td>16.88 kWh</td><td>29.52 kWh</td>
+      </tr>
+      <tr>
+        <td>2</td><td>I-KA-BGLR-ENB-3469</td><td>104.79 kWh</td><td>113.4 kWh</td>
+        <td>0.36 kWh</td><td>--</td><td>8.98 kWh</td>
+      </tr>
+      <tr>
+        <td>2</td><td>I-UP-GOND-ENB-9145</td><td>53.62 kWh</td><td>55.08 kWh</td>
+        <td>12.92 kWh</td><td>--</td><td>14.38 kWh</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 2: Operational Overview             -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <!-- SITE 1: KOLR-9059 -->
+  <div class="op-title">Operational Overview for Telecom Site I-KA-KOLR-ENB-9059</div>
+  <div class="op-grid">
+    <div class="op-card">
+      <div class="op-icon-wrap green">⚡</div>
+      <div class="op-value">0 <span class="unit">kWh</span></div>
+      <div class="op-label">Total Charged Energy</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap red">🔋</div>
+      <div class="op-value">0.93 <span class="unit">kWh</span></div>
+      <div class="op-label">Total Discharged Energy</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap blue">🔄</div>
+      <div class="op-value">0</div>
+      <div class="op-label"># of Charging Sessions</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap orange">📊</div>
+      <div class="op-value">2</div>
+      <div class="op-label"># of Discharging Sessions</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap purple">🕐</div>
+      <div class="op-value">14 <span class="unit">mins</span></div>
+      <div class="op-label">Longest Discharging Session</div>
+    </div>
+  </div>
+
+  <!-- SITE 2: BGLR-3469 -->
+  <div class="op-title">Operational Overview for Telecom Site I-KA-BGLR-ENB-3469</div>
+  <div class="op-grid">
+    <div class="op-card">
+      <div class="op-icon-wrap green">⚡</div>
+      <div class="op-value">0.0 <span class="unit">kWh</span></div>
+      <div class="op-label">Total Charged Energy</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap red">🔋</div>
+      <div class="op-value">0.0 <span class="unit">kWh</span></div>
+      <div class="op-label">Total Discharged Energy</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap blue">🔄</div>
+      <div class="op-value">0</div>
+      <div class="op-label"># of Charging Sessions</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap orange">📊</div>
+      <div class="op-value">0</div>
+      <div class="op-label"># of Discharging Sessions</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap purple">🕐</div>
+      <div class="op-value">0 <span class="unit">mins</span></div>
+      <div class="op-label">Longest Discharging Session</div>
+    </div>
+  </div>
+
+  <!-- SITE 3: GOND-9145 -->
+  <div class="op-title">Operational Overview for Telecom Site I-UP-GOND-ENB-9145</div>
+  <div class="op-grid">
+    <div class="op-card">
+      <div class="op-icon-wrap green">⚡</div>
+      <div class="op-value">14.2 <span class="unit">kWh</span></div>
+      <div class="op-label">Total Charged Energy</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap red">🔋</div>
+      <div class="op-value">13.84 <span class="unit">kWh</span></div>
+      <div class="op-label">Total Discharged Energy</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap blue">🔄</div>
+      <div class="op-value">4</div>
+      <div class="op-label"># of Charging Sessions</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap orange">📊</div>
+      <div class="op-value">3</div>
+      <div class="op-label"># of Discharging Sessions</div>
+    </div>
+    <div class="op-card">
+      <div class="op-icon-wrap purple">🕐</div>
+      <div class="op-value">2 hr 10 <span class="unit">mins</span></div>
+      <div class="op-label">Longest Discharging Session</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 3: S.H.O.W. Analytics KPIs         -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-title blue"><u>S</u>.H.<u>O</u>.W. Analytics based KPIs for Telco BESS</div>
+
+  <!-- Safety + Health table -->
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="2" style="vertical-align:middle;">SAP ID</th>
+        <th class="show-safety" colspan="4">Safety KPIs</th>
+        <th class="show-health" colspan="3">Health KPIs</th>
+      </tr>
+      <tr>
+        <th>Voltage Imbalance</th>
+        <th>Max Cell Temperatures</th>
+        <th>Number of Critical Faults</th>
+        <th>State of Health</th>
+        <th>BESS Stayed &lt;20% SoC</th>
+        <th>Cell Replacement Count</th>
+        <th>Full Discharge Capacity Delivered</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>I-KA-KOLR-ENB-9059</td>
+        <td>&lt; 5 V</td><td>34.0 °C</td><td>NIL</td><td>100.0%</td>
+        <td>0 mins</td><td>Zero</td><td>2.7% DOD – 0.467 kWh/ BESS</td>
+      </tr>
+      <tr>
+        <td>I-KA-BGLR-ENB-3469</td>
+        <td>&lt; 5 V</td><td>34.0 °C</td><td>NIL</td><td>100.0%</td>
+        <td>0 mins</td><td>Zero</td><td>0% DOD – 0.0 kWh/ BESS</td>
+      </tr>
+      <tr>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>&lt; 5 V</td><td>29.0 °C</td><td>NIL</td><td>100.0%</td>
+        <td>0 mins</td><td>Zero</td><td>43.79% DOD – 6.919 kWh/ BESS</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Operational + Warranty table -->
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="2" style="vertical-align:middle;">SAP ID</th>
+        <th class="show-ops" colspan="4">Operational KPIs</th>
+        <th class="show-warranty" colspan="1">Warranty KPIs</th>
+      </tr>
+      <tr>
+        <th>Avg Daily Depth of Discharge</th>
+        <th>Energy Throughput Logged</th>
+        <th>Number of Charging Sessions</th>
+        <th>Number of Discharging Sessions</th>
+        <th>Warranty Breached Events Detected</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>I-KA-KOLR-ENB-9059</td>
+        <td>2.7%</td><td>0.93 kWh</td><td>0</td><td>2</td><td>NIL</td>
+      </tr>
+      <tr>
+        <td>I-KA-BGLR-ENB-3469</td>
+        <td>0%</td><td>0.0 kWh</td><td>0</td><td>0</td><td>NIL</td>
+      </tr>
+      <tr>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>43.79%</td><td>28.04 kWh</td><td>4</td><td>3</td><td>NIL</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 4: Charging & Discharging Summary   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-title green">Charging & Discharging Summary</div>
+
+  <div class="section-subtitle">Discharging Summary for Telco BESS</div>
+  <table>
+    <thead>
+      <tr>
+        <th>SAP ID</th><th>SoC Range</th><th>C-Rate Range</th>
+        <th>Voltage Range</th><th>Current Range</th><th>Temperature Range</th><th>Cell Voltages</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>I-KA-KOLR-ENB-9059</td>
+        <td>99.84% to 97.05%</td><td>0.003 to 0.152 C</td><td>49.69 to 51.43 V</td>
+        <td>5.99 to 90.00 A</td><td>30 - 34 °C</td><td>3.31 to 3.45 V</td>
+      </tr>
+      <tr>
+        <td>I-KA-BGLR-ENB-3469</td>
+        <td>No Session</td><td>No Session</td><td>No Session</td>
+        <td>No Session</td><td>No Session</td><td>No Session</td>
+      </tr>
+      <tr>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>99.97% to 84.30%</td><td>0.039 to 0.104 C</td><td>49.50 to 52.08 V</td>
+        <td>16.94 to 67.96 A</td><td>19 - 29 °C</td><td>3.30 to 3.48 V</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-subtitle">Charging Summary for Telco BESS</div>
+  <table>
+    <thead>
+      <tr>
+        <th>SAP ID</th><th>SoC Range</th><th>C-Rate Range</th>
+        <th>Voltage Range</th><th>Current Range</th><th>Temperature Range</th><th>Cell Voltages</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>I-KA-KOLR-ENB-9059</td>
+        <td>No Session</td><td>No Session</td><td>No Session</td>
+        <td>No Session</td><td>No Session</td><td>No Session</td>
+      </tr>
+      <tr>
+        <td>I-KA-BGLR-ENB-3469</td>
+        <td>No Session</td><td>No Session</td><td>No Session</td>
+        <td>No Session</td><td>No Session</td><td>No Session</td>
+      </tr>
+      <tr>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>84.35% to 100.00%</td><td>0.001 to 0.131 C</td><td>49.74 to 54.02 V</td>
+        <td>0.26 to 79.54 A</td><td>20 - 29 °C</td><td>3.32 to 3.65 V</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- DETAILED SESSION ANALYSIS                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section-title purple">Detailed Session Analysis</div>
+
+  <div class="detail-title">Analysis of Discharging Sessions</div>
+  <table class="detail-table">
+    <thead>
+      <tr>
+        <th>Sno</th><th>SAP ID</th><th>Session Start Time</th><th>Session End Time</th>
+        <th>Session Duration</th><th>Start SoC</th><th>End SoC</th>
+        <th>Equivalent Cycle</th><th>Energy Discharged</th><th>C-Rate Change</th>
+        <th>Voltage Range</th><th>Current</th><th>Temperature</th><th>Cell Voltages</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>28 Feb, 05:35 AM</td>
+        <td>28 Feb, 07:45 AM</td>
+        <td>2 hr 9 mins</td>
+        <td>99.97%</td>
+        <td>87.13%</td>
+        <td>0.0642</td>
+        <td>4.041</td>
+        <td>0.039 to 0.086 C</td>
+        <td>49.5 to 51.9 V</td>
+        <td>16.9 – 48.3 A</td>
+        <td>19 - 21°C</td>
+        <td>3.30 to 3.47 V</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>28 Feb, 11:32 AM</td>
+        <td>28 Feb, 01:30 PM</td>
+        <td>1 hr 58 mins</td>
+        <td>99.95%</td>
+        <td>84.30%</td>
+        <td>0.0783</td>
+        <td>4.925</td>
+        <td>0.059 to 0.104 C</td>
+        <td>49.5 to 51.7 V</td>
+        <td>40.3 – 63.4 A</td>
+        <td>22 - 26°C</td>
+        <td>3.30 to 3.46 V</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>28 Feb, 03:13 PM</td>
+        <td>28 Feb, 05:23 PM</td>
+        <td>2 hr 10 mins</td>
+        <td>99.97%</td>
+        <td>84.67%</td>
+        <td>0.0765</td>
+        <td>4.854</td>
+        <td>0.052 to 0.098 C</td>
+        <td>49.6 to 52.1 V</td>
+        <td>18.9 – 68.0 A</td>
+        <td>27 - 29°C</td>
+        <td>3.31 to 3.48 V</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>I-KA-KOLR-ENB-9059</td>
+        <td>28 Feb, 04:19 PM</td>
+        <td>28 Feb, 04:33 PM</td>
+        <td>14 mins</td>
+        <td>99.84%</td>
+        <td>98.70%</td>
+        <td>0.0057</td>
+        <td>0.389</td>
+        <td>0.029 to 0.093 C</td>
+        <td>50.3 to 51.4 V</td>
+        <td>21.6 – 47.4 A</td>
+        <td>32 - 34°C</td>
+        <td>3.35 to 3.45 V</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="detail-title">Analysis of Charging Sessions</div>
+  <table class="detail-table">
+    <thead>
+      <tr>
+        <th>Sno</th><th>SAP ID</th><th>Session Start Time</th><th>Session End Time</th>
+        <th>Session Duration</th><th>Start SoC</th><th>End SoC</th>
+        <th>Equivalent Cycle</th><th>Energy Charged</th><th>C-Rate Change</th>
+        <th>Voltage Range</th><th>Current</th><th>Temperature</th><th>Cell Voltages</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>28 Feb, 07:45 AM</td>
+        <td>28 Feb, 08:51 AM</td>
+        <td>1 hr 5 mins</td>
+        <td>87.11%</td>
+        <td>100.00%</td>
+        <td>0.0645</td>
+        <td>4.171</td>
+        <td>0.041 to 0.127 C</td>
+        <td>49.8 to 54.0 V</td>
+        <td>12.8 – 77.6 A</td>
+        <td>20 - 21°C</td>
+        <td>3.32 to 3.65 V</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>28 Feb, 01:30 PM</td>
+        <td>28 Feb, 02:32 PM</td>
+        <td>1 hr 1 mins</td>
+        <td>84.35%</td>
+        <td>96.72%</td>
+        <td>0.0619</td>
+        <td>3.955</td>
+        <td>0.047 to 0.131 C</td>
+        <td>49.8 to 50.7 V</td>
+        <td>30.6 – 79.5 A</td>
+        <td>24 - 28°C</td>
+        <td>3.32 to 3.38 V</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>28 Feb, 02:32 PM</td>
+        <td>28 Feb, 02:50 PM</td>
+        <td>17 mins</td>
+        <td>96.78%</td>
+        <td>100.00%</td>
+        <td>0.0161</td>
+        <td>1.128</td>
+        <td>0.061 to 0.128 C</td>
+        <td>50.5 to 53.8 V</td>
+        <td>39.0 – 77.3 A</td>
+        <td>27 - 29°C</td>
+        <td>3.36 to 3.63 V</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>I-UP-GOND-ENB-9145</td>
+        <td>28 Feb, 05:23 PM</td>
+        <td>28 Feb, 06:40 PM</td>
+        <td>1 hr 17 mins</td>
+        <td>84.64%</td>
+        <td>100.00%</td>
+        <td>0.0768</td>
+        <td>4.946</td>
+        <td>0.001 to 0.128 C</td>
+        <td>49.7 to 53.9 V</td>
+        <td>0.3 – 78.2 A</td>
+        <td>28 - 29°C</td>
+        <td>3.32 to 3.64 V</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note">Note: For Detailed Session Analysis, only charging and discharging sessions with a duration exceeding 10 minutes are considered.</p>
+
+</div>
+</body>
+</html>
